@@ -4,8 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Hasnat Tech | Task Manager</title>
+<title>Hasnat Tech | Task Manager 2.0</title>
 
 <style>
 * {
@@ -14,19 +13,19 @@
 
 body {
   margin: 0;
-  padding: 30px 15px;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #0f172a, #164e63);
-  color: white;
+  padding: 25px 15px;
   min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0f172a, #155e75);
+  color: white;
 }
 
 .app {
-  max-width: 550px;
-  margin: 40px auto;
-  padding: 30px;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 25px;
   background: #1e293b;
-  border-radius: 20px;
+  border-radius: 18px;
   box-shadow: 0 15px 35px #0005;
 }
 
@@ -40,25 +39,75 @@ h1 {
   color: #cbd5e1;
 }
 
-form {
-  display: flex;
-  gap: 10px;
+h2 {
+  margin-top: 30px;
+  font-size: 22px;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
   margin-top: 30px;
 }
 
-input {
-  flex: 1;
+.stat {
+  background: #334155;
+  text-align: center;
+  padding: 20px 10px;
+  border-radius: 12px;
+}
+
+.stat strong {
+  display: block;
+  color: #22d3ee;
+  font-size: 32px;
+}
+
+.stat span {
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+.progress {
+  height: 12px;
+  background: #475569;
+  border-radius: 20px;
+  margin-top: 22px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  width: 0%;
+  height: 100%;
+  background: #2dd4bf;
+  transition: width 0.3s;
+}
+
+#progressText {
+  text-align: center;
+  color: #cbd5e1;
+}
+
+form {
+  display: grid;
+  grid-template-columns: 1fr 150px;
+  gap: 12px;
+}
+
+input, select {
+  width: 100%;
   min-width: 0;
-  padding: 14px;
-  border-radius: 8px;
+  padding: 13px;
   border: none;
-  font-size: 16px;
+  border-radius: 8px;
+  font-size: 15px;
 }
 
 button {
+  padding: 12px 16px;
   border: none;
   border-radius: 8px;
-  padding: 12px 18px;
   cursor: pointer;
   font-weight: bold;
 }
@@ -72,61 +121,125 @@ button {
   background: #67e8f9;
 }
 
+.search {
+  margin-top: 15px;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  background: #475569;
+  color: white;
+}
+
+.filter-btn.active {
+  background: #0891b2;
+}
+
 ul {
-  list-style: none;
   padding: 0;
-  margin-top: 25px;
+  list-style: none;
 }
 
 li {
-  background: #334155;
-  margin-bottom: 12px;
-  padding: 13px;
-  border-radius: 10px;
   display: flex;
   align-items: center;
   gap: 12px;
+  background: #334155;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 12px;
 }
 
-.task-text {
+.task-content {
   flex: 1;
+  min-width: 0;
   overflow-wrap: anywhere;
-  cursor: pointer;
 }
 
-.completed {
-  text-decoration: line-through;
+.task-content strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.task-content small {
+  color: #cbd5e1;
+  display: block;
+  margin-top: 6px;
+}
+
+.done {
   color: #94a3b8;
+  text-decoration: line-through;
 }
 
-.done-btn {
+.priority {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.high {
+  background: #7f1d1d;
+  color: #fecaca;
+}
+
+.medium {
+  background: #78350f;
+  color: #fde68a;
+}
+
+.low {
+  background: #064e3b;
+  color: #a7f3d0;
+}
+
+.complete-btn {
   background: #0d9488;
   color: white;
 }
 
 .delete-btn {
-  background: #ef4444;
+  background: #dc2626;
   color: white;
 }
 
-#counter {
-  color: #cbd5e1;
+.empty {
   text-align: center;
+  color: #cbd5e1;
+  width: 100%;
+  justify-content: center;
 }
 
 footer {
   text-align: center;
-  margin-top: 30px;
   color: #94a3b8;
+  font-size: 13px;
+  margin-top: 30px;
 }
 
-@media (max-width: 440px) {
+@media (max-width: 600px) {
   .app {
-    padding: 20px 14px;
+    padding: 18px 14px;
   }
 
   form {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+  }
+
+  li {
+    flex-wrap: wrap;
+  }
+
+  .stat strong {
+    font-size: 24px;
   }
 }
 </style>
@@ -136,179 +249,329 @@ footer {
 
 <div class="app">
 
-  <h1>🚀 Hasnat Tech</h1>
+<h1>🚀 Hasnat Tech</h1>
 
-  <p class="subtitle">
-    My Smart Task Manager
-  </p>
+<p class="subtitle">
+Smart Task Manager 2.0
+</p>
 
-  <form id="taskForm">
+<div class="dashboard">
 
-    <input
-      type="text"
-      id="taskInput"
-      placeholder="Enter your task..."
-      maxlength="150"
-      required
-    >
+  <div class="stat">
+    <strong id="totalCount">0</strong>
+    <span>Total Tasks</span>
+  </div>
 
-    <button type="submit" class="add-btn">
-      + Add
-    </button>
+  <div class="stat">
+    <strong id="doneCount">0</strong>
+    <span>Completed</span>
+  </div>
 
-  </form>
+  <div class="stat">
+    <strong id="pendingCount">0</strong>
+    <span>Pending</span>
+  </div>
 
-  <ul id="taskList"></ul>
+</div>
 
-  <p id="counter">0 tasks completed</p>
+<div class="progress">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
 
-  <footer>
-    Built with HTML, CSS & JavaScript
-  </footer>
+<p id="progressText">0% completed</p>
+
+<h2>➕ Add New Task</h2>
+
+<form id="taskForm">
+
+  <input
+    id="taskInput"
+    type="text"
+    placeholder="Enter your task"
+    maxlength="150"
+    required
+  >
+
+  <select id="priority">
+    <option value="medium">Medium Priority</option>
+    <option value="high">High Priority</option>
+    <option value="low">Low Priority</option>
+  </select>
+
+  <input type="date" id="dueDate">
+
+  <button class="add-btn" type="submit">
+    + Add Task
+  </button>
+
+</form>
+
+<h2>📋 My Tasks</h2>
+
+<input
+  class="search"
+  type="search"
+  id="searchInput"
+  placeholder="Search tasks..."
+>
+
+<div class="filters">
+
+  <button class="filter-btn active"
+    data-filter="all">All</button>
+
+  <button class="filter-btn"
+    data-filter="pending">Pending</button>
+
+  <button class="filter-btn"
+    data-filter="completed">Completed</button>
+
+</div>
+
+<ul id="taskList"></ul>
+
+<footer>
+  <p>© 2026 Hasnat Tech</p>
+  <p>Built with HTML, CSS & JavaScript</p>
+  <p>Tasks are saved in this browser only.</p>
+</footer>
 
 </div>
 
 <script>
 
-// STEP 1: Load saved tasks
+const STORAGE_KEY = "hasnatTasks";
+
 let tasks = [];
+let currentFilter = "all";
 
+// Load old and new saved tasks
 try {
-  tasks = JSON.parse(
-    localStorage.getItem("hasnatTasks")
-  ) || [];
+  const saved = JSON.parse(
+    localStorage.getItem(STORAGE_KEY)
+  );
 
-  if (!Array.isArray(tasks)) {
-    tasks = [];
+  if (Array.isArray(saved)) {
+    tasks = saved
+      .filter(task => task && typeof task === "object")
+      .map(task => ({
+        text: String(task.text || ""),
+        done: Boolean(task.done),
+        priority: ["high", "medium", "low"]
+          .includes(task.priority)
+          ? task.priority : "medium",
+        dueDate: typeof task.dueDate === "string"
+          ? task.dueDate : ""
+      }));
   }
-
 } catch (error) {
   tasks = [];
 }
 
-// STEP 2: Save tasks
+// Save tasks
 function saveTasks() {
   try {
     localStorage.setItem(
-      "hasnatTasks",
+      STORAGE_KEY,
       JSON.stringify(tasks)
     );
   } catch (error) {
-    alert("Tasks could not be saved.");
+    alert("Unable to save tasks in this browser.");
   }
 }
 
-// STEP 3: Display tasks
+// Update dashboard
+function updateDashboard() {
+
+  let total = tasks.length;
+
+  let completed = tasks.filter(
+    task => task.done
+  ).length;
+
+  let pending = total - completed;
+
+  let percent = total === 0
+    ? 0
+    : Math.round(completed / total * 100);
+
+  document.getElementById("totalCount")
+    .textContent = total;
+
+  document.getElementById("doneCount")
+    .textContent = completed;
+
+  document.getElementById("pendingCount")
+    .textContent = pending;
+
+  document.getElementById("progressFill")
+    .style.width = percent + "%";
+
+  document.getElementById("progressText")
+    .textContent = percent + "% completed";
+}
+
+// Display tasks
 function showTasks() {
 
-  let list = document.getElementById("taskList");
+  const list = document.getElementById("taskList");
+
+  const search = document.getElementById("searchInput")
+    .value.toLowerCase().trim();
 
   list.innerHTML = "";
 
+  let found = 0;
+
   tasks.forEach(function(task, index) {
 
-    let li = document.createElement("li");
-
-    let doneButton = document.createElement("button");
-    doneButton.textContent = "✓";
-    doneButton.className = "done-btn";
-    doneButton.setAttribute(
-      "aria-label",
-      "Toggle task completion"
-    );
-
-    doneButton.onclick = function() {
-      toggleTask(index);
-    };
-
-    let text = document.createElement("span");
-    text.textContent = task.text;
-    text.className = "task-text";
-
-    if (task.done) {
-      text.classList.add("completed");
+    if (currentFilter === "pending" && task.done) {
+      return;
     }
 
-    text.onclick = function() {
+    if (currentFilter === "completed" && !task.done) {
+      return;
+    }
+
+    if (!task.text.toLowerCase().includes(search)) {
+      return;
+    }
+
+    found++;
+
+    const li = document.createElement("li");
+
+    const completeButton = document.createElement("button");
+    completeButton.className = "complete-btn";
+    completeButton.textContent = task.done ? "↩" : "✓";
+    completeButton.title = "Toggle task completion";
+
+    completeButton.onclick = function() {
       toggleTask(index);
     };
 
-    let deleteButton = document.createElement("button");
-    deleteButton.textContent = "X";
+    const content = document.createElement("div");
+    content.className = "task-content";
+
+    const name = document.createElement("strong");
+    name.textContent = task.text;
+
+    if (task.done) {
+      name.classList.add("done");
+    }
+
+    const badge = document.createElement("span");
+    badge.className = "priority " + task.priority;
+    badge.textContent = task.priority.toUpperCase();
+
+    const date = document.createElement("small");
+    date.textContent = task.dueDate
+      ? "Due: " + task.dueDate
+      : "No deadline";
+
+    content.appendChild(name);
+    content.appendChild(badge);
+    content.appendChild(date);
+
+    const deleteButton = document.createElement("button");
     deleteButton.className = "delete-btn";
-    deleteButton.setAttribute(
-      "aria-label",
-      "Delete task"
-    );
+    deleteButton.textContent = "X";
+    deleteButton.title = "Delete task";
 
     deleteButton.onclick = function() {
       deleteTask(index);
     };
 
-    li.appendChild(doneButton);
-    li.appendChild(text);
+    li.appendChild(completeButton);
+    li.appendChild(content);
     li.appendChild(deleteButton);
 
     list.appendChild(li);
   });
 
-  let completed = tasks.filter(function(task) {
-    return task.done;
-  }).length;
+  if (found === 0) {
+    const empty = document.createElement("li");
+    empty.className = "empty";
+    empty.textContent = "No tasks found.";
+    list.appendChild(empty);
+  }
 
-  document.getElementById("counter").textContent =
-    completed + " of " + tasks.length +
-    " tasks completed";
+  updateDashboard();
 }
 
-// STEP 4: Add a task
+// Add new task
 document.getElementById("taskForm")
 .addEventListener("submit", function(event) {
 
   event.preventDefault();
 
-  let input = document.getElementById("taskInput");
+  const input = document.getElementById("taskInput");
+  const text = input.value.trim();
 
-  let newTask = input.value.trim();
-
-  if (newTask === "") {
+  if (!text) {
     return;
   }
 
+  const priority = document.getElementById("priority").value;
+  const dueDate = document.getElementById("dueDate").value;
+
   tasks.push({
-    text: newTask,
-    done: false
+    text: text,
+    done: false,
+    priority: priority,
+    dueDate: dueDate
   });
 
   saveTasks();
   showTasks();
 
-  input.value = "";
+  this.reset();
   input.focus();
-
 });
 
-// STEP 5: Mark task completed
+// Mark complete
 function toggleTask(index) {
 
   tasks[index].done = !tasks[index].done;
 
   saveTasks();
   showTasks();
-
 }
 
-// STEP 6: Delete a task
+// Delete task
 function deleteTask(index) {
 
   tasks.splice(index, 1);
 
   saveTasks();
   showTasks();
-
 }
 
-// STEP 7: Show tasks when page opens
+// Search
+document.getElementById("searchInput")
+.addEventListener("input", showTasks);
+
+// Filters
+document.querySelectorAll(".filter-btn")
+.forEach(function(button) {
+
+  button.addEventListener("click", function() {
+
+    currentFilter = button.dataset.filter;
+
+    document.querySelectorAll(".filter-btn")
+      .forEach(function(btn) {
+        btn.classList.remove("active");
+      });
+
+    button.classList.add("active");
+
+    showTasks();
+  });
+
+});
+
+// Start app
 showTasks();
 
 </script>
