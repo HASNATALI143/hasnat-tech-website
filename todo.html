@@ -1,0 +1,317 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Hasnat Tech | Task Manager</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 30px 15px;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0f172a, #164e63);
+  color: white;
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 550px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #1e293b;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px #0005;
+}
+
+h1 {
+  text-align: center;
+  color: #22d3ee;
+}
+
+.subtitle {
+  text-align: center;
+  color: #cbd5e1;
+}
+
+form {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+input {
+  flex: 1;
+  min-width: 0;
+  padding: 14px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 12px 18px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.add-btn {
+  background: #22d3ee;
+  color: #083344;
+}
+
+.add-btn:hover {
+  background: #67e8f9;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 25px;
+}
+
+li {
+  background: #334155;
+  margin-bottom: 12px;
+  padding: 13px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.task-text {
+  flex: 1;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+
+.done-btn {
+  background: #0d9488;
+  color: white;
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: white;
+}
+
+#counter {
+  color: #cbd5e1;
+  text-align: center;
+}
+
+footer {
+  text-align: center;
+  margin-top: 30px;
+  color: #94a3b8;
+}
+
+@media (max-width: 440px) {
+  .app {
+    padding: 20px 14px;
+  }
+
+  form {
+    flex-direction: column;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <h1>🚀 Hasnat Tech</h1>
+
+  <p class="subtitle">
+    My Smart Task Manager
+  </p>
+
+  <form id="taskForm">
+
+    <input
+      type="text"
+      id="taskInput"
+      placeholder="Enter your task..."
+      maxlength="150"
+      required
+    >
+
+    <button type="submit" class="add-btn">
+      + Add
+    </button>
+
+  </form>
+
+  <ul id="taskList"></ul>
+
+  <p id="counter">0 tasks completed</p>
+
+  <footer>
+    Built with HTML, CSS & JavaScript
+  </footer>
+
+</div>
+
+<script>
+
+// STEP 1: Load saved tasks
+let tasks = [];
+
+try {
+  tasks = JSON.parse(
+    localStorage.getItem("hasnatTasks")
+  ) || [];
+
+  if (!Array.isArray(tasks)) {
+    tasks = [];
+  }
+
+} catch (error) {
+  tasks = [];
+}
+
+// STEP 2: Save tasks
+function saveTasks() {
+  try {
+    localStorage.setItem(
+      "hasnatTasks",
+      JSON.stringify(tasks)
+    );
+  } catch (error) {
+    alert("Tasks could not be saved.");
+  }
+}
+
+// STEP 3: Display tasks
+function showTasks() {
+
+  let list = document.getElementById("taskList");
+
+  list.innerHTML = "";
+
+  tasks.forEach(function(task, index) {
+
+    let li = document.createElement("li");
+
+    let doneButton = document.createElement("button");
+    doneButton.textContent = "✓";
+    doneButton.className = "done-btn";
+    doneButton.setAttribute(
+      "aria-label",
+      "Toggle task completion"
+    );
+
+    doneButton.onclick = function() {
+      toggleTask(index);
+    };
+
+    let text = document.createElement("span");
+    text.textContent = task.text;
+    text.className = "task-text";
+
+    if (task.done) {
+      text.classList.add("completed");
+    }
+
+    text.onclick = function() {
+      toggleTask(index);
+    };
+
+    let deleteButton = document.createElement("button");
+    deleteButton.textContent = "X";
+    deleteButton.className = "delete-btn";
+    deleteButton.setAttribute(
+      "aria-label",
+      "Delete task"
+    );
+
+    deleteButton.onclick = function() {
+      deleteTask(index);
+    };
+
+    li.appendChild(doneButton);
+    li.appendChild(text);
+    li.appendChild(deleteButton);
+
+    list.appendChild(li);
+  });
+
+  let completed = tasks.filter(function(task) {
+    return task.done;
+  }).length;
+
+  document.getElementById("counter").textContent =
+    completed + " of " + tasks.length +
+    " tasks completed";
+}
+
+// STEP 4: Add a task
+document.getElementById("taskForm")
+.addEventListener("submit", function(event) {
+
+  event.preventDefault();
+
+  let input = document.getElementById("taskInput");
+
+  let newTask = input.value.trim();
+
+  if (newTask === "") {
+    return;
+  }
+
+  tasks.push({
+    text: newTask,
+    done: false
+  });
+
+  saveTasks();
+  showTasks();
+
+  input.value = "";
+  input.focus();
+
+});
+
+// STEP 5: Mark task completed
+function toggleTask(index) {
+
+  tasks[index].done = !tasks[index].done;
+
+  saveTasks();
+  showTasks();
+
+}
+
+// STEP 6: Delete a task
+function deleteTask(index) {
+
+  tasks.splice(index, 1);
+
+  saveTasks();
+  showTasks();
+
+}
+
+// STEP 7: Show tasks when page opens
+showTasks();
+
+</script>
+
+</body>
+</html>
