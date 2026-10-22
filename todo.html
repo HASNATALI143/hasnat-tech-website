@@ -3,578 +3,466 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hasnat Tech | Task Manager 2.0</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hasnat Tech | Task Manager 3.0</title>
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+body{
+ margin:0;padding:20px;
+ font-family:Arial,sans-serif;
+ background:linear-gradient(135deg,#0f172a,#155e75);
+ color:white;min-height:100vh;
 }
-
-body {
-  margin: 0;
-  padding: 25px 15px;
-  min-height: 100vh;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #0f172a, #155e75);
-  color: white;
+.app{
+ max-width:800px;margin:20px auto;
+ background:#1e293b;padding:25px;
+ border-radius:20px;
+ box-shadow:0 10px 30px #0005;
 }
-
-.app {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 25px;
-  background: #1e293b;
-  border-radius: 18px;
-  box-shadow: 0 15px 35px #0005;
+h1{text-align:center;color:#22d3ee}
+.subtitle{text-align:center;color:#cbd5e1}
+h2{margin-top:30px}
+.dashboard{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px;margin-top:25px;
 }
-
-h1 {
-  text-align: center;
-  color: #22d3ee;
+.stat{
+ background:#334155;
+ padding:18px 8px;
+ border-radius:12px;text-align:center;
 }
-
-.subtitle {
-  text-align: center;
-  color: #cbd5e1;
+.stat strong{
+ display:block;font-size:28px;color:#22d3ee;
 }
-
-h2 {
-  margin-top: 30px;
-  font-size: 22px;
+.stat span{font-size:12px;color:#cbd5e1}
+.progress{
+ background:#475569;
+ height:12px;border-radius:20px;
+ overflow:hidden;margin-top:20px;
 }
-
-.dashboard {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-top: 30px;
+#bar{
+ background:#2dd4bf;
+ width:0%;height:100%;
+ transition:width .3s;
 }
-
-.stat {
-  background: #334155;
-  text-align: center;
-  padding: 20px 10px;
-  border-radius: 12px;
+#progressText{text-align:center;color:#cbd5e1}
+form{
+ display:grid;
+ grid-template-columns:1fr 150px;
+ gap:10px;
 }
-
-.stat strong {
-  display: block;
-  color: #22d3ee;
-  font-size: 32px;
+input,select{
+ padding:12px;border:0;
+ border-radius:8px;font-size:15px;
+ width:100%;min-width:0;
 }
-
-.stat span {
-  font-size: 13px;
-  color: #cbd5e1;
+button,.file-label{
+ padding:12px;border:0;
+ border-radius:8px;cursor:pointer;
+ font-weight:bold;
+ font-size:13px;
 }
-
-.progress {
-  height: 12px;
-  background: #475569;
-  border-radius: 20px;
-  margin-top: 22px;
-  overflow: hidden;
+.add{background:#22d3ee;color:#083344}
+.done-btn{background:#0d9488;color:white}
+.edit-btn{background:#eab308;color:#1c1917}
+.delete-btn{background:#dc2626;color:white}
+.backup-btn{background:#2563eb;color:white}
+.restore-btn{background:#475569;color:white}
+.tools{
+ display:flex;gap:10px;
+ flex-wrap:wrap;margin:20px 0;
 }
-
-.progress-fill {
-  width: 0%;
-  height: 100%;
-  background: #2dd4bf;
-  transition: width 0.3s;
+.tools button{background:#475569;color:white}
+.tools button.active{background:#0891b2}
+.backup{
+ display:flex;gap:10px;
+ flex-wrap:wrap;margin-top:15px;
 }
-
-#progressText {
-  text-align: center;
-  color: #cbd5e1;
+#restoreFile{display:none}
+ul{list-style:none;padding:0}
+li{
+ background:#334155;
+ padding:14px;margin-bottom:12px;
+ border-radius:12px;
+ display:flex;gap:10px;
+ align-items:center;flex-wrap:wrap;
 }
-
-form {
-  display: grid;
-  grid-template-columns: 1fr 150px;
-  gap: 12px;
+.task-info{
+ flex:1;min-width:140px;
+ overflow-wrap:anywhere;
 }
-
-input, select {
-  width: 100%;
-  min-width: 0;
-  padding: 13px;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
+.task-info strong{display:block;margin-bottom:6px}
+.task-info small{color:#cbd5e1}
+.completed{
+ text-decoration:line-through;color:#94a3b8;
 }
-
-button {
-  padding: 12px 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
+.priority{
+ display:inline-block;
+ padding:4px 8px;border-radius:6px;
+ margin:5px 0;font-size:12px;
 }
-
-.add-btn {
-  background: #22d3ee;
-  color: #083344;
+.high{background:#7f1d1d;color:#fecaca}
+.medium{background:#78350f;color:#fde68a}
+.low{background:#064e3b;color:#a7f3d0}
+.empty{text-align:center;color:#cbd5e1}
+footer{
+ text-align:center;color:#94a3b8;
+ margin-top:35px;font-size:13px;
 }
-
-.add-btn:hover {
-  background: #67e8f9;
-}
-
-.search {
-  margin-top: 15px;
-}
-
-.filters {
-  display: flex;
-  gap: 10px;
-  margin: 20px 0;
-  flex-wrap: wrap;
-}
-
-.filter-btn {
-  background: #475569;
-  color: white;
-}
-
-.filter-btn.active {
-  background: #0891b2;
-}
-
-ul {
-  padding: 0;
-  list-style: none;
-}
-
-li {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: #334155;
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 12px;
-}
-
-.task-content {
-  flex: 1;
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.task-content strong {
-  display: block;
-  margin-bottom: 8px;
-}
-
-.task-content small {
-  color: #cbd5e1;
-  display: block;
-  margin-top: 6px;
-}
-
-.done {
-  color: #94a3b8;
-  text-decoration: line-through;
-}
-
-.priority {
-  display: inline-block;
-  padding: 5px 9px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.high {
-  background: #7f1d1d;
-  color: #fecaca;
-}
-
-.medium {
-  background: #78350f;
-  color: #fde68a;
-}
-
-.low {
-  background: #064e3b;
-  color: #a7f3d0;
-}
-
-.complete-btn {
-  background: #0d9488;
-  color: white;
-}
-
-.delete-btn {
-  background: #dc2626;
-  color: white;
-}
-
-.empty {
-  text-align: center;
-  color: #cbd5e1;
-  width: 100%;
-  justify-content: center;
-}
-
-footer {
-  text-align: center;
-  color: #94a3b8;
-  font-size: 13px;
-  margin-top: 30px;
-}
-
-@media (max-width: 600px) {
-  .app {
-    padding: 18px 14px;
-  }
-
-  form {
-    grid-template-columns: 1fr;
-  }
-
-  li {
-    flex-wrap: wrap;
-  }
-
-  .stat strong {
-    font-size: 24px;
-  }
+@media(max-width:600px){
+ .app{padding:18px}
+ form{grid-template-columns:1fr}
 }
 </style>
 </head>
-
 <body>
 
 <div class="app">
 
 <h1>🚀 Hasnat Tech</h1>
-
-<p class="subtitle">
-Smart Task Manager 2.0
-</p>
+<p class="subtitle">Smart Task Manager 3.0</p>
 
 <div class="dashboard">
-
-  <div class="stat">
-    <strong id="totalCount">0</strong>
-    <span>Total Tasks</span>
-  </div>
-
-  <div class="stat">
-    <strong id="doneCount">0</strong>
-    <span>Completed</span>
-  </div>
-
-  <div class="stat">
-    <strong id="pendingCount">0</strong>
-    <span>Pending</span>
-  </div>
-
+ <div class="stat">
+  <strong id="total">0</strong>
+  <span>Total Tasks</span>
+ </div>
+ <div class="stat">
+  <strong id="completed">0</strong>
+  <span>Completed</span>
+ </div>
+ <div class="stat">
+  <strong id="pending">0</strong>
+  <span>Pending</span>
+ </div>
 </div>
 
-<div class="progress">
-  <div class="progress-fill" id="progressFill"></div>
-</div>
-
+<div class="progress"><div id="bar"></div></div>
 <p id="progressText">0% completed</p>
 
-<h2>➕ Add New Task</h2>
+<h2>➕ Add Task</h2>
 
 <form id="taskForm">
+ <input id="taskInput" placeholder="Enter task"
+        maxlength="150" required>
 
-  <input
-    id="taskInput"
-    type="text"
-    placeholder="Enter your task"
-    maxlength="150"
-    required
-  >
+ <select id="priority">
+  <option value="medium">Medium Priority</option>
+  <option value="high">High Priority</option>
+  <option value="low">Low Priority</option>
+ </select>
 
-  <select id="priority">
-    <option value="medium">Medium Priority</option>
-    <option value="high">High Priority</option>
-    <option value="low">Low Priority</option>
-  </select>
+ <input type="date" id="dueDate">
 
-  <input type="date" id="dueDate">
-
-  <button class="add-btn" type="submit">
-    + Add Task
-  </button>
-
+ <button class="add" type="submit">
+  + Add Task
+ </button>
 </form>
 
 <h2>📋 My Tasks</h2>
 
-<input
-  class="search"
-  type="search"
-  id="searchInput"
-  placeholder="Search tasks..."
->
+<input id="search" type="search"
+       placeholder="Search tasks...">
 
-<div class="filters">
-
-  <button class="filter-btn active"
-    data-filter="all">All</button>
-
-  <button class="filter-btn"
-    data-filter="pending">Pending</button>
-
-  <button class="filter-btn"
-    data-filter="completed">Completed</button>
-
+<div class="tools">
+ <button data-filter="all" class="active">All</button>
+ <button data-filter="pending">Pending</button>
+ <button data-filter="completed">Completed</button>
 </div>
 
 <ul id="taskList"></ul>
 
+<h2>💾 Data Backup</h2>
+<p>Download your tasks or restore a saved backup.</p>
+
+<div class="backup">
+ <button class="backup-btn" id="downloadBtn">
+  ⬇ Download Backup
+ </button>
+
+ <label class="file-label restore-btn"
+        for="restoreFile">
+  ⬆ Restore Backup
+ </label>
+
+ <input id="restoreFile" type="file"
+        accept=".json,application/json">
+</div>
+
 <footer>
-  <p>© 2026 Hasnat Tech</p>
-  <p>Built with HTML, CSS & JavaScript</p>
-  <p>Tasks are saved in this browser only.</p>
+ © 2026 Hasnat Tech
+ <p>Built with HTML, CSS & JavaScript</p>
+ <p>Data is saved in your browser.</p>
 </footer>
 
 </div>
 
 <script>
+const KEY = "hasnatTasks";
 
-const STORAGE_KEY = "hasnatTasks";
+const taskInput = document.getElementById("taskInput");
+const taskList = document.getElementById("taskList");
+const search = document.getElementById("search");
 
 let tasks = [];
-let currentFilter = "all";
+let filter = "all";
 
-// Load old and new saved tasks
+// Make old 2.0 tasks compatible with 3.0
+function cleanTask(t) {
+ if(!t || typeof t !== "object" ||
+    typeof t.text !== "string") return null;
+
+ let text = t.text.trim().slice(0,150);
+ if(!text) return null;
+
+ return {
+  text:text,
+  done:t.done === true,
+  priority:["high","medium","low"].includes(t.priority)
+   ? t.priority : "medium",
+  dueDate:typeof t.dueDate === "string" &&
+   /^\d{4}-\d{2}-\d{2}$/.test(t.dueDate)
+   ? t.dueDate : ""
+ };
+}
+
+// Load tasks
 try {
-  const saved = JSON.parse(
-    localStorage.getItem(STORAGE_KEY)
-  );
-
-  if (Array.isArray(saved)) {
-    tasks = saved
-      .filter(task => task && typeof task === "object")
-      .map(task => ({
-        text: String(task.text || ""),
-        done: Boolean(task.done),
-        priority: ["high", "medium", "low"]
-          .includes(task.priority)
-          ? task.priority : "medium",
-        dueDate: typeof task.dueDate === "string"
-          ? task.dueDate : ""
-      }));
-  }
-} catch (error) {
-  tasks = [];
+ let data = JSON.parse(localStorage.getItem(KEY));
+ if(Array.isArray(data)) {
+  tasks = data.map(cleanTask).filter(Boolean);
+ }
+} catch(e) {
+ tasks = [];
 }
 
 // Save tasks
-function saveTasks() {
-  try {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(tasks)
-    );
-  } catch (error) {
-    alert("Unable to save tasks in this browser.");
-  }
+function save() {
+ try {
+  localStorage.setItem(KEY,JSON.stringify(tasks));
+  return true;
+ } catch(e) {
+  alert("Unable to save tasks.");
+  return false;
+ }
 }
 
 // Update dashboard
-function updateDashboard() {
+function dashboard() {
+ let total = tasks.length;
+ let done = tasks.filter(t=>t.done).length;
+ let percent = total
+   ? Math.round(done/total*100) : 0;
 
-  let total = tasks.length;
-
-  let completed = tasks.filter(
-    task => task.done
-  ).length;
-
-  let pending = total - completed;
-
-  let percent = total === 0
-    ? 0
-    : Math.round(completed / total * 100);
-
-  document.getElementById("totalCount")
-    .textContent = total;
-
-  document.getElementById("doneCount")
-    .textContent = completed;
-
-  document.getElementById("pendingCount")
-    .textContent = pending;
-
-  document.getElementById("progressFill")
-    .style.width = percent + "%";
-
-  document.getElementById("progressText")
-    .textContent = percent + "% completed";
+ document.getElementById("total").textContent=total;
+ document.getElementById("completed").textContent=done;
+ document.getElementById("pending").textContent=total-done;
+ document.getElementById("bar").style.width=percent+"%";
+ document.getElementById("progressText").textContent=
+   percent+"% completed";
 }
 
-// Display tasks
+// Create button
+function makeButton(text,css,action) {
+ let b=document.createElement("button");
+ b.textContent=text;
+ b.className=css;
+ b.type="button";
+ b.onclick=action;
+ return b;
+}
+
+// Show tasks
 function showTasks() {
+ taskList.replaceChildren();
 
-  const list = document.getElementById("taskList");
+ let count=0;
+ let query=search.value.trim().toLowerCase();
 
-  const search = document.getElementById("searchInput")
-    .value.toLowerCase().trim();
+ tasks.forEach((task,index)=>{
+  if(filter==="pending" && task.done) return;
+  if(filter==="completed" && !task.done) return;
+  if(!task.text.toLowerCase().includes(query)) return;
 
-  list.innerHTML = "";
+  count++;
+  let li=document.createElement("li");
 
-  let found = 0;
+  let info=document.createElement("div");
+  info.className="task-info";
 
-  tasks.forEach(function(task, index) {
+  let title=document.createElement("strong");
+  title.textContent=task.text;
+  if(task.done) title.className="completed";
 
-    if (currentFilter === "pending" && task.done) {
-      return;
-    }
+  let priority=document.createElement("span");
+  priority.className="priority "+task.priority;
+  priority.textContent=task.priority.toUpperCase();
 
-    if (currentFilter === "completed" && !task.done) {
-      return;
-    }
+  let date=document.createElement("small");
+  date.textContent=task.dueDate
+    ? "Due: "+task.dueDate : "No deadline";
 
-    if (!task.text.toLowerCase().includes(search)) {
-      return;
-    }
+  info.append(title,priority,date);
 
-    found++;
+  li.append(
+   makeButton(task.done?"↩":"✓","done-btn",
+      ()=>toggleTask(index)),
+   info,
+   makeButton("✏ Edit","edit-btn",
+      ()=>editTask(index)),
+   makeButton("X","delete-btn",
+      ()=>deleteTask(index))
+  );
 
-    const li = document.createElement("li");
+  taskList.appendChild(li);
+ });
 
-    const completeButton = document.createElement("button");
-    completeButton.className = "complete-btn";
-    completeButton.textContent = task.done ? "↩" : "✓";
-    completeButton.title = "Toggle task completion";
+ if(count===0) {
+  let p=document.createElement("p");
+  p.className="empty";
+  p.textContent="No tasks found.";
+  taskList.appendChild(p);
+ }
 
-    completeButton.onclick = function() {
-      toggleTask(index);
-    };
-
-    const content = document.createElement("div");
-    content.className = "task-content";
-
-    const name = document.createElement("strong");
-    name.textContent = task.text;
-
-    if (task.done) {
-      name.classList.add("done");
-    }
-
-    const badge = document.createElement("span");
-    badge.className = "priority " + task.priority;
-    badge.textContent = task.priority.toUpperCase();
-
-    const date = document.createElement("small");
-    date.textContent = task.dueDate
-      ? "Due: " + task.dueDate
-      : "No deadline";
-
-    content.appendChild(name);
-    content.appendChild(badge);
-    content.appendChild(date);
-
-    const deleteButton = document.createElement("button");
-    deleteButton.className = "delete-btn";
-    deleteButton.textContent = "X";
-    deleteButton.title = "Delete task";
-
-    deleteButton.onclick = function() {
-      deleteTask(index);
-    };
-
-    li.appendChild(completeButton);
-    li.appendChild(content);
-    li.appendChild(deleteButton);
-
-    list.appendChild(li);
-  });
-
-  if (found === 0) {
-    const empty = document.createElement("li");
-    empty.className = "empty";
-    empty.textContent = "No tasks found.";
-    list.appendChild(empty);
-  }
-
-  updateDashboard();
+ dashboard();
 }
 
-// Add new task
+// Add task
 document.getElementById("taskForm")
-.addEventListener("submit", function(event) {
+.addEventListener("submit",function(e) {
+ e.preventDefault();
 
-  event.preventDefault();
+ let text=taskInput.value.trim();
+ if(!text)return;
 
-  const input = document.getElementById("taskInput");
-  const text = input.value.trim();
+ tasks.push({
+  text:text,
+  done:false,
+  priority:document.getElementById("priority").value,
+  dueDate:document.getElementById("dueDate").value
+ });
 
-  if (!text) {
-    return;
-  }
-
-  const priority = document.getElementById("priority").value;
-  const dueDate = document.getElementById("dueDate").value;
-
-  tasks.push({
-    text: text,
-    done: false,
-    priority: priority,
-    dueDate: dueDate
-  });
-
-  saveTasks();
-  showTasks();
-
-  this.reset();
-  input.focus();
+ save();
+ showTasks();
+ this.reset();
+ taskInput.focus();
 });
 
-// Mark complete
+// Complete task
 function toggleTask(index) {
+ tasks[index].done=!tasks[index].done;
+ save();
+ showTasks();
+}
 
-  tasks[index].done = !tasks[index].done;
+// NEW: Edit task
+function editTask(index) {
+ let old=tasks[index].text;
+ let changed=prompt("Edit your task:",old);
 
-  saveTasks();
-  showTasks();
+ if(changed===null)return;
+
+ changed=changed.trim().slice(0,150);
+
+ if(!changed) {
+  alert("Task name cannot be empty.");
+  return;
+ }
+
+ tasks[index].text=changed;
+ save();
+ showTasks();
 }
 
 // Delete task
 function deleteTask(index) {
-
-  tasks.splice(index, 1);
-
-  saveTasks();
-  showTasks();
+ tasks.splice(index,1);
+ save();
+ showTasks();
 }
 
 // Search
-document.getElementById("searchInput")
-.addEventListener("input", showTasks);
+search.addEventListener("input",showTasks);
 
 // Filters
-document.querySelectorAll(".filter-btn")
-.forEach(function(button) {
+document.querySelectorAll("[data-filter]")
+.forEach(button=>{
+ button.addEventListener("click",()=>{
+  filter=button.dataset.filter;
 
-  button.addEventListener("click", function() {
+  document.querySelectorAll("[data-filter]")
+  .forEach(b=>b.classList.remove("active"));
 
-    currentFilter = button.dataset.filter;
-
-    document.querySelectorAll(".filter-btn")
-      .forEach(function(btn) {
-        btn.classList.remove("active");
-      });
-
-    button.classList.add("active");
-
-    showTasks();
-  });
-
+  button.classList.add("active");
+  showTasks();
+ });
 });
 
-// Start app
+// NEW: Download backup
+document.getElementById("downloadBtn")
+.addEventListener("click",()=>{
+
+ let blob=new Blob(
+  [JSON.stringify(tasks,null,2)],
+  {type:"application/json"}
+ );
+
+ let url=URL.createObjectURL(blob);
+
+ let a=document.createElement("a");
+ a.href=url;
+ a.download="hasnat-tech-backup.json";
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
+
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+
+// NEW: Restore backup
+document.getElementById("restoreFile")
+.addEventListener("change",async function() {
+ let file=this.files[0];
+ if(!file)return;
+
+ try {
+  if(file.size>1000000) {
+   throw new Error("File is too large.");
+  }
+
+  let data=JSON.parse(await file.text());
+
+  if(!Array.isArray(data) ||
+     !data.every(t=>cleanTask(t)!==null)) {
+   throw new Error("Invalid backup format.");
+  }
+
+  let restored=data.map(cleanTask);
+
+  let ok=confirm(
+   "Replace your current tasks with backup tasks?"
+  );
+
+  if(ok) {
+   let previous=tasks;
+   tasks=restored;
+
+   if(!save()) {
+    tasks=previous;
+   }
+
+   showTasks();
+  }
+ } catch(e) {
+  alert("Could not restore backup: "+e.message);
+ }
+
+ this.value="";
+});
+
+// Start
 showTasks();
-
 </script>
-
 </body>
 </html>
